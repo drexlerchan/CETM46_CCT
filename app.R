@@ -27,31 +27,38 @@ ds <- read.csv("assign_data.csv")
 str(ds)
 
 server <- function(input, output) {
+  #output$distrint_ <- renderText
+  
+  output$distrint_ <- renderText({
+    sprintf("xxx", input$y)
+  })
 }
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Introduction", tabName = "intro", icon = icon("list-alt"))
-    #menuItem("Predict", tabName = "myPrediction", icon = icon("robot", class = NULL, lib = "font-awesome"))
+    menuItem("Introduction", tabName = "intro", icon = icon("list-alt")),
+    menuItem("Predict", tabName = "myPrediction", icon = icon("robot", class = NULL, lib = "font-awesome"))
     
   )
 )
 
 body <- dashboardBody(
   tabItems(
-    #Zero tabItem
-    
-    tabItem(tabName = 'intro',  #intro 
+    # First tabItem 
+    tabItem(tabName = "myPrediction",
       fluidRow(
         box(
-          background = 'light-blue',
-          h2('House Price Prediction Platform'),
-                
-          tags$p("This is the wine application for the CETM46 Assignment Two written by Chan Chun Tak."), 
-          tags$p(""), 
-          tags$p("Submited on 23th Jan 2023"),
-          width = 48)
-        )
+          title = "Hong Kong Distrint",
+          selectInput(inputId='distrint_', label='Distrint', c("Hong Konge" = "HK", "Kowloon" = "KLN", "New Territories" = "NT"))
+        ),
+        
+      ),
+      fluidRow(
+        box(
+          title = "Size Category",
+            selectInput(inputId='category_', label='Category', c("A"="A", "B"="B", "C"="C", "D"="D","E"="E"))
+          )
+      )
     )
   )
 )
