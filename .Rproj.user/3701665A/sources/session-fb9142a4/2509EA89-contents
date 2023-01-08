@@ -27,18 +27,17 @@ ds <- read.csv("assign_data.csv")
 str(ds)
 
 server <- function(input, output) {
-  #output$distrint_ <- renderText
-  
-  output$distrint_ <- renderText({
-    sprintf("xxx", input$y)
-  })
+
+    output$predict_price <- renderText({
+      #print("hi")
+      input$distrint_
+    })
 }
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Introduction", tabName = "intro", icon = icon("list-alt")),
     menuItem("Predict", tabName = "myPrediction", icon = icon("robot", class = NULL, lib = "font-awesome"))
-    
   )
 )
 
@@ -49,36 +48,31 @@ body <- dashboardBody(
       fluidRow(
         box(
           title = "Hong Kong Distrint",
-          selectInput(inputId='distrint_', label='Distrint', c("Hong Konge" = "HK", "Kowloon" = "KLN", "New Territories" = "NT"))
+          selectInput('distrint_', label='Distrint', 
+            choices = list("Hong Kong" = "HK", "Kowloon" = "KLN", "New Territories" = "NT")
+          )
         ),
-        
       ),
       fluidRow(
         box(
           title = "Size Category",
-            selectInput(inputId='category_', label='Category', c("A"="A", "B"="B", "C"="C", "D"="D","E"="E"))
+          selectInput(inputId='category_', label='Category', 
+                      c("A"="A", "B"="B", "C"="C", "D"="D","E"="E")
           )
+        )
+      ),
+      
+      fluidRow(
+        textOutput("predict_price")
       )
+
     )
   )
 )
   
 
 
-# Define server logic required to draw a histogram
-server <- function(input, output) {
 
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
-}
 
 ui <- dashboardPage(header = dashboardHeader(title = "Chan Chun Tak - House Price Prediction App", titleWidth = 350),
                     sidebar = sidebar,
