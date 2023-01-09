@@ -32,15 +32,34 @@ server <- function(input, output) {
       #if (input$category_ = 'A') {
        # print("hi")
       # }
-      input$category_
+      cate_ = input$category_
       #input$distrint_
+      if (cate_ =='A'){
+        print("A")
+      }else if (cate_ =='B'){
+        print("B")
+      }else if (cate_ =='C'){
+        print("C")
+      }else if (cate_ =='D'){
+        print("D")
+      }else if (cate_ =='E'){
+        print("E")
+      }
+      
     })
-}
+    
+    output$datatable <- DT::renderDataTable(
+      DT::datatable(ds)
+    )
+} # end of server side
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Introduction", tabName = "intro", icon = icon("list-alt")),
-    menuItem("Predict", tabName = "myPrediction", icon = icon("robot", class = NULL, lib = "font-awesome"))
+    menuItem("Predict", tabName = "myPrediction", icon = icon("robot", class = NULL, lib = "font-awesome")),
+    menuItem("Histogram", tabName = "histdata" , icon = icon("th")),
+    menuItem("DataTable", tabName = "pricedata", icon = icon("download"))
+    
   )
 )
 
@@ -69,15 +88,27 @@ body <- dashboardBody(
           )
         )
       ),
-      
       fluidRow(
         box(
           textOutput("predict_price")
         )
       )
-
-    )
+    ), #end tabItem="myPrediction"
+    
+    tabItem(tabName = "histdata",
+    ), # end or histdata
+    
+    tabItem(tabName = "pricedata",
+      fluidRow(
+        h1('House Price History Data'),
+        box( width = 8,
+          DT::dataTableOutput('datatable'),
+        )
+      )
+    ) # end tabName = "pricedata"
   )
+  
+  
 )
   
 
