@@ -29,8 +29,11 @@ str(ds)
 server <- function(input, output) {
 
     output$predict_price <- renderText({
-      #print("hi")
-      input$distrint_
+      #if (input$category_ = 'A') {
+       # print("hi")
+      # }
+      input$category_
+      #input$distrint_
     })
 }
 
@@ -55,15 +58,22 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(
-          title = "Size Category",
-          selectInput(inputId='category_', label='Category', 
+          tags$strong("Size Category"),
+          tags$p("A = Below 40 Meter square"),
+          tags$p("B = 40 to 69.9 Meter Square"),
+          tags$p("C = 70 to 99.9 Meter Square"),
+          tags$p("D = 100 to 159.9 Meter Square"),
+          tags$p("Over 160 Meter Square"),
+          selectInput(inputId='category_', label='', 
                       c("A"="A", "B"="B", "C"="C", "D"="D","E"="E")
           )
         )
       ),
       
       fluidRow(
-        textOutput("predict_price")
+        box(
+          textOutput("predict_price")
+        )
       )
 
     )
