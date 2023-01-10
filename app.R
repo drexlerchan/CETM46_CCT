@@ -24,28 +24,47 @@ library(plotly)
 library(DT)
 
 ds <- read.csv("assign_data.csv")
-str(ds)
+head(ds)
 
 server <- function(input, output) {
 
-    output$predict_price <- renderText({
-      #if (input$category_ = 'A') {
-       # print("hi")
-      # }
+    output$predict_price <- renderPrint({
+
+      dist_ = input$distrint_
       cate_ = input$category_
-      #input$distrint_
-      if (cate_ =='A'){
-        print("A")
-      }else if (cate_ =='B'){
-        print("B")
-      }else if (cate_ =='C'){
-        print("C")
-      }else if (cate_ =='D'){
-        print("D")
-      }else if (cate_ =='E'){
-        print("E")
-      }
       
+      ds2 <- ds
+      if (dist_ =='HK'){
+        fit_1 <- lm(HK ~ Category, data = ds2)  
+      }else if (dist_ =='KLN'){
+        fit_1 <- lm(KLN ~ Category, data = ds2)  
+      }else{
+        fit_1 <- lm(NT ~ Category, data = ds2)  
+      }
+      #summary(fit_1)
+      #if (cate_ =='A'){
+        #ds2 <- filter(ds2,Category == cate_ )
+      #  fit_1 <- lm(HK ~ Category, data = ds2)
+        #summary(fit_1)
+      #   print("A")
+      # }else if (cate_ =='B'){
+      #   print("B")
+      # }else if (cate_ =='C'){
+      #   print("C")
+      # }else if (cate_ =='D'){
+      #   print("D")
+      # }else if (cate_ =='E'){
+      #   print("E")
+      #}
+      #print(cate_)
+      aa <- predict(fit_1,newdata = ds2)
+      bb <- data.frame(Category=cate_)
+      cc <- predict(fit_1,bb)
+      cat(cc)
+      #ds2 <- filter(ds2,Category == cate_ ) #req(input$category_))
+      #head(ds2)
+      #fit_1 <- lm(HK ~ Category, data = ds2)
+      #summary(fit_1)
     })
     
     output$datatable <- DT::renderDataTable(
@@ -64,16 +83,20 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
+
   tabItems(
     # First tabItem 
     tabItem(tabName = "myPrediction",
-      fluidRow(
+
+      fluidRow(width = 10,
         box(
           title = "Hong Kong Distrint",
           selectInput('distrint_', label='Distrint', 
             choices = list("Hong Kong" = "HK", "Kowloon" = "KLN", "New Territories" = "NT")
           )
         ),
+        h3("Prediction Price: HKD"),
+        h3(textOutput("predict_price"))
       ),
       fluidRow(
         box(
@@ -82,20 +105,23 @@ body <- dashboardBody(
           tags$p("B = 40 to 69.9 Meter Square"),
           tags$p("C = 70 to 99.9 Meter Square"),
           tags$p("D = 100 to 159.9 Meter Square"),
-          tags$p("Over 160 Meter Square"),
+          tags$p("E = Over 160 Meter Square"),
           selectInput(inputId='category_', label='', 
-                      c("A"="A", "B"="B", "C"="C", "D"="D","E"="E")
+            c("A"="A", "B"="B", "C"="C", "D"="D","E"="E")
           )
         )
-      ),
-      fluidRow(
-        box(
-          textOutput("predict_price")
-        )
-      )
+
+      )#,
+      #fluidRow(
+      #  box(
+      #    h3("Prediction Price: HKD"),
+      #    h3(textOutput("predict_price"))
+      #  )
+      #)
     ), #end tabItem="myPrediction"
     
     tabItem(tabName = "histdata",
+      
     ), # end or histdata
     
     tabItem(tabName = "pricedata",
