@@ -140,7 +140,7 @@ body <- dashboardBody(
     ), #end tabItem="myPrediction"
     
     tabItem(tabName = "histdata",
-      titlePanel("History Data for Hong Kong Private property price in meter "),
+      titlePanel("History Data for Hong Kong Private property price in Meter Square"),
             
       sidebarLayout(
               
@@ -190,7 +190,7 @@ body <- dashboardBody(
 )
 
 
-ui <- dashboardPage(header = dashboardHeader(title = "Chan Chun Tak - House Price Prediction App", titleWidth = 350),
+ui <- dashboardPage(header = dashboardHeader(title = "Chan Chun Tak 219575441 - House Price Prediction App", titleWidth = 550),
                     sidebar = sidebar,
                     body = body, skin = "yellow"
 )
