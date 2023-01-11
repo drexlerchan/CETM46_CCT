@@ -67,6 +67,26 @@ server <- function(input, output) {
       #summary(fit_1)
     })
     
+    output$linearplot <- renderPlotly({
+      dist2_ = input$distrint2_
+      cate2_ = input$category2_
+      
+      ds3 <- ds
+      if (dist2_ =='HK'){
+        ggplt <- ggplot(data = ds3, aes(x = Year, y = HK,colore=Category))
+      }else if (dist2_ =='KLN'){
+        ggplt <-ggplot(data = ds3, aes(x = Year, y = KLN,colore=Category))  
+      }else{
+        ggplt <-ggplot(data = ds3, aes(x = Year, y = NT,colore=Category))
+      }
+      
+      ggplt+geom_point() +
+        stat_smooth(method = "lm", se = FALSE,  aes(color=Category)) + 
+        ggtitle("Linear Model Fitted to Data")
+        #ggtitle("Linear Model Fitted to Data")
+      
+    })
+
     output$datatable <- DT::renderDataTable(
       DT::datatable(ds)
     )
@@ -110,7 +130,6 @@ body <- dashboardBody(
             c("A"="A", "B"="B", "C"="C", "D"="D","E"="E")
           )
         )
-
       )#,
       #fluidRow(
       #  box(
@@ -121,7 +140,40 @@ body <- dashboardBody(
     ), #end tabItem="myPrediction"
     
     tabItem(tabName = "histdata",
-      
+      titlePanel("History Data for Hong Kong Private property price in meter "),
+            
+      sidebarLayout(
+              
+        sidebarPanel(
+          fluidRow( 
+                   box(width=300,
+                     title = "Hong Kong Distrint",
+                     selectInput('distrint2_', label='Distrint2', 
+                                 choices = list("Hong Kong" = "HK", "Kowloon" = "KLN", "New Territories" = "NT")
+                     )
+                   )#,
+                   #h3("Prediction Price: HKD"),
+                   #h3(textOutput("predict_price"))
+          ),
+          fluidRow(
+            box(width=300,
+              tags$strong("Size Category"),
+              tags$p("A = Below 40 Meter square"),
+              tags$p("B = 40 to 69.9 Meter Square"),
+              tags$p("C = 70 to 99.9 Meter Square"),
+              tags$p("D = 100 to 159.9 Meter Square"),
+              tags$p("E = Over 160 Meter Square"),
+              selectInput(inputId='category2_', label='', 
+                          c("A"="A", "B"="B", "C"="C", "D"="D","E"="E")
+              )
+            )
+          )
+        ),
+              
+        mainPanel(
+          plotlyOutput("linearplot")
+        )
+      )  
     ), # end or histdata
     
     tabItem(tabName = "pricedata",
@@ -136,9 +188,6 @@ body <- dashboardBody(
   
   
 )
-  
-
-
 
 
 ui <- dashboardPage(header = dashboardHeader(title = "Chan Chun Tak - House Price Prediction App", titleWidth = 350),
