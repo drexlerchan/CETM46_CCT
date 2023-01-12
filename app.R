@@ -22,6 +22,7 @@ library(maps)
 library(jpeg)
 library(plotly)
 library(DT)
+library(scales)
 
 ds <- read.csv("assign_data.csv")
 head(ds)
@@ -41,30 +42,12 @@ server <- function(input, output) {
       }else{
         fit_1 <- lm(NT ~ Category, data = ds2)  
       }
-      #summary(fit_1)
-      #if (cate_ =='A'){
-        #ds2 <- filter(ds2,Category == cate_ )
-      #  fit_1 <- lm(HK ~ Category, data = ds2)
-        #summary(fit_1)
-      #   print("A")
-      # }else if (cate_ =='B'){
-      #   print("B")
-      # }else if (cate_ =='C'){
-      #   print("C")
-      # }else if (cate_ =='D'){
-      #   print("D")
-      # }else if (cate_ =='E'){
-      #   print("E")
-      #}
-      #print(cate_)
+
       aa <- predict(fit_1,newdata = ds2)
       bb <- data.frame(Category=cate_)
       cc <- predict(fit_1,bb)
       cat(cc)
-      #ds2 <- filter(ds2,Category == cate_ ) #req(input$category_))
-      #head(ds2)
-      #fit_1 <- lm(HK ~ Category, data = ds2)
-      #summary(fit_1)
+
     })
     
     output$linearplot <- renderPlotly({
@@ -73,18 +56,21 @@ server <- function(input, output) {
       
       ds3 <- ds
       if (dist2_ =='HK'){
-        ggplt <- ggplot(data = ds3, aes(x = Year, y = HK,colore=Category))
+        ggplt <- ggplot(data = ds3, aes(x = Year, y = HK,colore=Category)) +
+          labs(y= "Hong Kong", x = "Year")
       }else if (dist2_ =='KLN'){
-        ggplt <-ggplot(data = ds3, aes(x = Year, y = KLN,colore=Category))  
+        ggplt <-ggplot(data = ds3, aes(x = Year, y = KLN,colore=Category)) +
+          labs(y= "Kowloon", x = "Year")
       }else{
-        ggplt <-ggplot(data = ds3, aes(x = Year, y = NT,colore=Category))
+        ggplt <-ggplot(data = ds3, aes(x = Year, y = NT,colore=Category)) +
+          labs(y= "New Territories", x = "Year")
       }
       
       ggplt+geom_point() +
+        scale_y_continuous(labels = comma) +
         stat_smooth(method = "lm", se = FALSE,  aes(color=Category)) + 
         ggtitle("Linear Model Fitted to Data")
-        #ggtitle("Linear Model Fitted to Data")
-      
+
     })
 
     output$datatable <- DT::renderDataTable(
@@ -103,7 +89,31 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
-
+  #tabItems(
+    #Zero tabItem
+    
+    tabItem(tabName = 'intro',  #intro 
+      fluidRow(
+        box(
+          background = 'light-blue',
+          h2('Hong Kong House Price Prediction Platform'),
+                
+          tags$p("This is the wine application for the CETM46 Assignment 2 written by Chan Chun Tak."), 
+          tags$p(""), 
+          tags$p("Submited on 23rd Jan 2022"),
+          tags$p(),
+          tags$p("The dataset for this product was retrieved from Hong Kong Government and the data between Jan 1999 to Dec 2021."), 
+          tags$p("The dataset contains Year, Month, Category, HK, KLN and NT. For details, please refer to the URL below:"),
+          tags$a(href = "https://Data.gov.hk", style="color:yellow", "Hong Kong Dataset."),
+          tags$p(), 
+          tags$p("Thank you."),
+          tags$p("---"),
+          tags$p("Chan Chun Tak"),
+          width = 48
+        )
+      )
+    ),
+    
   tabItems(
     # First tabItem 
     tabItem(tabName = "myPrediction",
@@ -130,41 +140,19 @@ body <- dashboardBody(
             c("A"="A", "B"="B", "C"="C", "D"="D","E"="E")
           )
         )
-      )#,
-      #fluidRow(
-      #  box(
-      #    h3("Prediction Price: HKD"),
-      #    h3(textOutput("predict_price"))
-      #  )
-      #)
+      )
     ), #end tabItem="myPrediction"
     
     tabItem(tabName = "histdata",
       titlePanel("History Data for Hong Kong Private property price in Meter Square"),
             
       sidebarLayout(
-              
         sidebarPanel(
           fluidRow( 
-                   box(width=300,
-                     title = "Hong Kong Distrint",
-                     selectInput('distrint2_', label='Distrint2', 
-                                 choices = list("Hong Kong" = "HK", "Kowloon" = "KLN", "New Territories" = "NT")
-                     )
-                   )#,
-                   #h3("Prediction Price: HKD"),
-                   #h3(textOutput("predict_price"))
-          ),
-          fluidRow(
             box(width=300,
-              tags$strong("Size Category"),
-              tags$p("A = Below 40 Meter square"),
-              tags$p("B = 40 to 69.9 Meter Square"),
-              tags$p("C = 70 to 99.9 Meter Square"),
-              tags$p("D = 100 to 159.9 Meter Square"),
-              tags$p("E = Over 160 Meter Square"),
-              selectInput(inputId='category2_', label='', 
-                          c("A"="A", "B"="B", "C"="C", "D"="D","E"="E")
+              title = "Hong Kong Distrint",
+              selectInput('distrint2_', label='Distrint2', 
+               choices = list("Hong Kong" = "HK", "Kowloon" = "KLN", "New Territories" = "NT")
               )
             )
           )
@@ -185,8 +173,7 @@ body <- dashboardBody(
       )
     ) # end tabName = "pricedata"
   )
-  
-  
+
 )
 
 
