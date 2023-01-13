@@ -151,7 +151,7 @@ body <- dashboardBody(
           fluidRow( 
             box(width=300,
               title = "Hong Kong Distrint",
-              selectInput('distrint2_', label='Distrint2', 
+              selectInput('distrint2_', label='Distrint', 
                choices = list("Hong Kong" = "HK", "Kowloon" = "KLN", "New Territories" = "NT")
               )
             )
