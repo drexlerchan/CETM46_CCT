@@ -57,13 +57,13 @@ server <- function(input, output) {
       ds3 <- ds
       if (dist2_ =='HK'){
         ggplt <- ggplot(data = ds3, aes(x = Year, y = HK,colore=Category)) +
-          labs(y= "Hong Kong", x = "Year")
+          labs(y= "Hong Kong Property Price", x = "Year")
       }else if (dist2_ =='KLN'){
         ggplt <-ggplot(data = ds3, aes(x = Year, y = KLN,colore=Category)) +
-          labs(y= "Kowloon", x = "Year")
+          labs(y= "Kowlon Property Price", x = "Year")
       }else{
         ggplt <-ggplot(data = ds3, aes(x = Year, y = NT,colore=Category)) +
-          labs(y= "New Territories", x = "Year")
+          labs(y= "New Territories Property Price", x = "Year")
       }
       
       ggplt+geom_point() +
@@ -81,7 +81,7 @@ server <- function(input, output) {
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Introduction", tabName = "intro", icon = icon("list-alt")),
-    menuItem("Predict", tabName = "myPrediction", icon = icon("robot", class = NULL, lib = "font-awesome")),
+    menuItem("Prediction", tabName = "myPrediction", icon = icon("robot", class = NULL, lib = "font-awesome")),
     menuItem("Histogram", tabName = "histdata" , icon = icon("th")),
     menuItem("DataTable", tabName = "pricedata", icon = icon("download"))
     
@@ -89,9 +89,9 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
-  #tabItems(
-    #Zero tabItem
-    
+  #Intro tabItem
+
+  tabItems(
     tabItem(tabName = 'intro',  #intro 
       fluidRow(
         box(
@@ -114,7 +114,6 @@ body <- dashboardBody(
       )
     ),
     
-  tabItems(
     # First tabItem 
     tabItem(tabName = "myPrediction",
 
