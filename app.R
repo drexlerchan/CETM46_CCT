@@ -119,8 +119,8 @@ body <- dashboardBody(
 
       fluidRow(width = 10,
         box(
-          title = "Hong Kong Distrint",
-          selectInput('distrint_', label='Distrint', 
+          title = "Hong Kong District",
+          selectInput('distrint_', label='District', 
             choices = list("Hong Kong" = "HK", "Kowloon" = "KLN", "New Territories" = "NT")
           )
         ),
@@ -149,8 +149,8 @@ body <- dashboardBody(
         sidebarPanel(
           fluidRow( 
             box(width=300,
-              title = "Hong Kong Distrint",
-              selectInput('distrint2_', label='Distrint', 
+              title = "Hong Kong District",
+              selectInput('distrint2_', label='District', 
                choices = list("Hong Kong" = "HK", "Kowloon" = "KLN", "New Territories" = "NT")
               )
             )
